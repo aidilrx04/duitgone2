@@ -56,23 +56,7 @@ class MyApp extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Card(
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    for (final money in moneys)
-                      ListTile(
-                        title: Text(
-                          money.category,
-                        ),
-                        subtitle: Text(
-                          DateFormat("hh:mm a").format(money.date),
-                        ),
-                        trailing: Text(money.amount.toStringAsFixed(2)),
-                      ),
-                  ],
-                ),
-              ),
+              child: MoneyList(moneys: moneys),
             ),
           ],
         ),
@@ -113,5 +97,35 @@ class MyApp extends StatelessWidget {
         radius: 100,
       );
     }).toList();
+  }
+}
+
+class MoneyList extends StatelessWidget {
+  const MoneyList({
+    super.key,
+    required this.moneys,
+  });
+
+  final List<Money> moneys;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.white,
+      child: Column(
+        children: [
+          for (final money in moneys)
+            ListTile(
+              title: Text(
+                money.category,
+              ),
+              subtitle: Text(
+                DateFormat("hh:mm a").format(money.date),
+              ),
+              trailing: Text(money.amount.toStringAsFixed(2)),
+            ),
+        ],
+      ),
+    );
   }
 }
