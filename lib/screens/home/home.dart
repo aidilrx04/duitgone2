@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:duitgone2/models/money.dart';
 import 'package:duitgone2/screens/home/money_list.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -6,65 +7,56 @@ import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
-
   static const title = "duitGone2";
 
   @override
   Widget build(BuildContext context) {
     final moneys = Money.generateMockData();
 
-    return MaterialApp(
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.orange,
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+      appBar: _createAppBar(context),
+      drawer: _createDrawer(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(
+          Icons.add,
+          size: 32,
         ),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
       ),
-      home: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-        appBar: _createAppBar(context),
-        drawer: _createDrawer(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: Icon(
-            Icons.add,
-            size: 32,
+      body: ListView(
+        children: [
+          SizedBox(
+            height: 300,
+            width: double.infinity,
+            child: PieChart(
+              duration: Duration(milliseconds: 250),
+              PieChartData(
+                sections: _createSections(moneys),
+                centerSpaceRadius: 0,
+              ),
+            ),
           ),
-        ),
-        body: ListView(
-          children: [
-            SizedBox(
-              height: 300,
-              width: double.infinity,
-              child: PieChart(
-                duration: Duration(milliseconds: 250),
-                PieChartData(
-                  sections: _createSections(moneys),
-                  centerSpaceRadius: 0,
-                ),
-              ),
+          SizedBox(
+            height: 10,
+          ),
+          Center(
+            child: Text(
+              moneys
+                  .map((mon) => mon.amount)
+                  .reduce((acc, val) => acc + val)
+                  .toStringAsFixed(2),
+              style: TextStyle(fontSize: 26),
             ),
-            SizedBox(
-              height: 10,
-            ),
-            Center(
-              child: Text(
-                moneys
-                    .map((mon) => mon.amount)
-                    .reduce((acc, val) => acc + val)
-                    .toStringAsFixed(2),
-                style: TextStyle(fontSize: 26),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: MoneyList(moneys: moneys),
-            ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: MoneyList(moneys: moneys),
+          ),
+        ],
       ),
     );
   }
