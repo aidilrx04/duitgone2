@@ -1,4 +1,5 @@
 import 'package:duitgone2/screens/Home/home.dart';
+import 'package:duitgone2/screens/about/about.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {
@@ -7,12 +8,13 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData(
-          appBarTheme: AppBarTheme(
-            backgroundColor: Colors.orange,
-          ),
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.orange,
         ),
-        home: Home());
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+      ),
+      home: Home(),
+    );
   }
 }

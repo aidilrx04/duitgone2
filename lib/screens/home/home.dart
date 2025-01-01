@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:duitgone2/models/money.dart';
+import 'package:duitgone2/screens/about/about.dart';
 import 'package:duitgone2/screens/home/money_list.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +91,10 @@ class Home extends StatelessWidget {
                 title: Text("Dashboard"),
               ),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => About()));
+                },
                 leading: Icon(Icons.info_outlined),
                 title: Text("About"),
               ),
