@@ -35,13 +35,22 @@ class MyApp extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
+            Center(
+              child: Text(
+                moneys
+                    .map((mon) => mon.amount)
+                    .reduce((acc, val) => acc + val)
+                    .toStringAsFixed(2),
+                style: TextStyle(fontSize: 26),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
             Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
+              child: Card(
+                color: Colors.white,
                 child: Column(
                   children: [
                     for (final money in moneys)
