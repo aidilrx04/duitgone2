@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         appBar: _createAppBar(context),
+        drawer: _createDrawer(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
           child: Icon(
@@ -73,6 +74,44 @@ class MyApp extends StatelessWidget {
     );
   }
 
+  Drawer _createDrawer() => Drawer(
+        child: Builder(builder: (context) {
+          return ListView(
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 26,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  Scaffold.of(context).closeDrawer();
+                },
+                leading: Icon(Icons.home_outlined),
+                title: Text("Dashboard"),
+              ),
+              ListTile(
+                onTap: () {},
+                leading: Icon(Icons.info_outlined),
+                title: Text("About"),
+              ),
+            ],
+          );
+        }),
+      );
+
   AppBar _createAppBar(BuildContext context) => AppBar(
         title: Text(
           title,
@@ -81,15 +120,17 @@ class MyApp extends StatelessWidget {
               .titleLarge!
               .copyWith(color: Colors.white),
         ),
-        leading: IconButton(
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-          icon: Icon(
-            Icons.menu,
-            color: Colors.white,
-          ),
-        ),
+        leading: Builder(builder: (context) {
+          return IconButton(
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+            icon: Icon(
+              Icons.menu,
+              color: Colors.white,
+            ),
+          );
+        }),
       );
 
   List<PieChartSectionData> _createSections(List<Money> moneys) {
