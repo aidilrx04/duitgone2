@@ -19,6 +19,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: Icon(
+            Icons.add,
+            size: 32,
+          ),
+        ),
         body: ListView(
           children: [
             SizedBox(
