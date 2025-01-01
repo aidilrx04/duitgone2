@@ -12,13 +12,22 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  static const title = "duitGone2";
+
   @override
   Widget build(BuildContext context) {
     final moneys = Money.generateMockData();
 
     return MaterialApp(
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.orange,
+        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+      ),
       home: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+        appBar: _createAppBar(context),
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
           child: Icon(
@@ -63,6 +72,25 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
+  AppBar _createAppBar(BuildContext context) => AppBar(
+        title: Text(
+          title,
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge!
+              .copyWith(color: Colors.white),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+          icon: Icon(
+            Icons.menu,
+            color: Colors.white,
+          ),
+        ),
+      );
 
   List<PieChartSectionData> _createSections(List<Money> moneys) {
     const colors = [
