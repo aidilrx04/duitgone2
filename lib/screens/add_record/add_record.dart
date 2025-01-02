@@ -91,7 +91,7 @@ class _AddRecordState extends State<AddRecord> {
               width: double.infinity,
               height: 40,
               child: ElevatedButton(
-                onPressed: _onAddBtnTap(context),
+              onPressed: _onAddBtnTap(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                 ),
@@ -128,4 +128,5 @@ class _AddRecordState extends State<AddRecord> {
       }
     };
   }
+
 }
