@@ -1,6 +1,7 @@
 import 'package:duitgone2/models/category.dart';
 import 'package:duitgone2/models/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AddRecord extends StatefulWidget {
   const AddRecord({super.key, this.onRecordAdded});
@@ -15,17 +16,33 @@ class _AddRecordState extends State<AddRecord> {
   Category? selectedCat;
 
   late List<Category> categories;
-  final amount = TextEditingController();
+  final amount = TextEditingController(text: "0");
+  bool hasLoaded = false;
+  bool isAmountValid = true;
+  bool hasCatSelected = true;
+
+  late FocusNode focusNode;
 
   @override
   void initState() {
     super.initState();
 
     categories = Category.generateMockData();
+
+    focusNode = FocusNode();
+
+    if (hasLoaded == false) {
+      hasLoaded = true;
+      focusNode.requestFocus();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isAmountValid == false) {
+      focusNode.requestFocus();
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Record"),
@@ -40,10 +57,35 @@ class _AddRecordState extends State<AddRecord> {
           children: [
             TextField(
               controller: amount,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))
+              ],
+              onChanged: (value) {
+                try {
+                  double.parse(value);
+                  setState(() {
+                    isAmountValid = true;
+                  });
+                } catch (e) {
+                  setState(() {
+                    isAmountValid = false;
+                  });
+                  return;
+                }
+              },
+              focusNode: focusNode,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 label: Text("Amount"),
                 icon: Icon(Icons.paid_outlined),
+                helper: isAmountValid == false
+                    ? Text(
+                        "Amount is not valid. Please try again.",
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              color: Colors.red,
+                            ),
+                      )
+                    : null,
               ),
             ),
             SizedBox(
@@ -78,12 +120,24 @@ class _AddRecordState extends State<AddRecord> {
                       if (selected) {
                         setState(() {
                           selectedCat = category;
+                          hasCatSelected = true;
                         });
                       }
                     },
                   ),
               ],
             ),
+            if (hasCatSelected == false) ...[
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                "Please select a category",
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: Colors.red,
+                    ),
+              ),
+            ],
             SizedBox(
               height: 20,
             ),
@@ -116,9 +170,21 @@ class _AddRecordState extends State<AddRecord> {
 
   _onAddBtnTap(BuildContext context) {
     return () {
-      Navigator.pop(context);
-
       if (widget.onRecordAdded != null) {
+        // validate amount value
+
+        if (isAmountValid == false) {
+          return;
+        }
+
+        if (selectedCat == null) {
+          setState(() {
+            hasCatSelected = false;
+          });
+          return;
+        }
+
+        Navigator.pop(context);
         widget.onRecordAdded!(
           _createTransaction(
             double.parse(amount.text),
