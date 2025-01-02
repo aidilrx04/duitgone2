@@ -1,5 +1,4 @@
 import 'package:duitgone2/screens/Home/home.dart';
-import 'package:duitgone2/screens/about/about.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {
