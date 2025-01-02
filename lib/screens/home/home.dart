@@ -75,6 +75,9 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.all(20.0),
             child: TransactionList(transactions: transactions),
           ),
+          SizedBox(
+            height: 60,
+          )
         ],
       ),
     );
