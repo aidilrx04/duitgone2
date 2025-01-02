@@ -1,8 +1,11 @@
 import 'package:duitgone2/models/category.dart';
+import 'package:duitgone2/models/money.dart';
 import 'package:flutter/material.dart';
 
 class AddRecord extends StatefulWidget {
-  const AddRecord({super.key});
+  const AddRecord({super.key, this.onRecordAdded});
+
+  final void Function(Money)? onRecordAdded;
 
   @override
   State<AddRecord> createState() => _AddRecordState();
@@ -12,6 +15,7 @@ class _AddRecordState extends State<AddRecord> {
   Category? selectedCat;
 
   late List<Category> categories;
+  final amount = TextEditingController();
 
   @override
   void initState() {
@@ -35,7 +39,7 @@ class _AddRecordState extends State<AddRecord> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
-              controller: TextEditingController(),
+              controller: amount,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 label: Text("Amount"),
@@ -87,7 +91,10 @@ class _AddRecordState extends State<AddRecord> {
               width: double.infinity,
               height: 40,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: _onAddBtnTap(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                ),
                 child: Text(
                   "ADD",
                   style: Theme.of(context)
@@ -95,14 +102,30 @@ class _AddRecordState extends State<AddRecord> {
                       .bodyLarge!
                       .copyWith(color: Colors.white),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                ),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Money _createMoney(double amount, Category cat) {
+    return Money(amount: amount, category: cat, date: DateTime.now());
+  }
+
+  _onAddBtnTap(BuildContext context) {
+    return () {
+      Navigator.pop(context);
+
+      if (widget.onRecordAdded != null) {
+        widget.onRecordAdded!(
+          _createMoney(
+            double.parse(amount.text),
+            selectedCat!,
+          ),
+        );
+      }
+    };
   }
 }
