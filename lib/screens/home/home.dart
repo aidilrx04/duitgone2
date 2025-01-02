@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:duitgone2/models/category.dart';
 import 'package:duitgone2/models/transaction.dart';
 import 'package:duitgone2/screens/about/about.dart';
 import 'package:duitgone2/screens/add_record/add_record.dart';
@@ -165,10 +166,13 @@ class _HomeState extends State<Home> {
       Colors.black,
       Colors.white,
     ];
-    return transactions.map((transaction) {
+
+    final groups = _groupTransactionByCategory(transactions);
+
+    return groups.entries.map((entry) {
       return PieChartSectionData(
-        value: transaction.amount.abs(),
-        title: transaction.category.label,
+        value: entry.value,
+        title: entry.key.label,
         titlePositionPercentageOffset: 1,
         color: colors[Random().nextInt(colors.length)],
         radius: 100,
@@ -181,5 +185,22 @@ class _HomeState extends State<Home> {
       print(transaction.category.label);
       transactions.insert(0, transaction);
     });
+  }
+
+  Map<Category, double> _groupTransactionByCategory(
+    List<Transaction> transactions,
+  ) {
+    Map<Category, double> group = {};
+
+    for (final trans in transactions) {
+      if (group[trans.category] != null) {
+        group[trans.category] = group[trans.category]! + trans.amount;
+        continue;
+      }
+
+      group[trans.category] = trans.amount;
+    }
+
+    return group;
   }
 }
