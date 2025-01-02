@@ -11,10 +11,17 @@ class AddRecord extends StatefulWidget {
 class _AddRecordState extends State<AddRecord> {
   Category? selectedCat;
 
+  late List<Category> categories;
+
+  @override
+  void initState() {
+    super.initState();
+
+    categories = Category.generateMockData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final categories = Category.generateMockData();
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Record"),
