@@ -19,7 +19,7 @@ class MoneyList extends StatelessWidget {
           for (final money in moneys)
             ListTile(
               title: Text(
-                money.category,
+                money.category.label,
               ),
               subtitle: Text(
                 DateFormat("hh:mm a").format(money.date),
