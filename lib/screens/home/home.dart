@@ -7,22 +7,35 @@ import 'package:duitgone2/screens/home/money_list.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
   static const title = "duitGone2";
 
   @override
-  Widget build(BuildContext context) {
-    final moneys = Money.generateMockData();
+  State<Home> createState() => _HomeState();
+}
 
+class _HomeState extends State<Home> {
+  late List<Money> moneys;
+
+  @override
+  void initState() {
+    super.initState();
+    moneys = Money.generateMockData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       appBar: _createAppBar(context),
       drawer: _createDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => AddRecord()));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => AddRecord(
+                    onRecordAdded: _addMoney,
+                  )));
         },
         child: Icon(
           Icons.add,
@@ -78,7 +91,7 @@ class Home extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      title,
+                      Home.title,
                       style: TextStyle(
                         fontSize: 26,
                         color: Colors.white,
@@ -109,7 +122,7 @@ class Home extends StatelessWidget {
 
   AppBar _createAppBar(BuildContext context) => AppBar(
         title: Text(
-          title,
+          Home.title,
           style: Theme.of(context)
               .textTheme
               .titleLarge!
@@ -161,5 +174,12 @@ class Home extends StatelessWidget {
         radius: 100,
       );
     }).toList();
+  }
+
+  void _addMoney(Money money) {
+    setState(() {
+      print(money.category.label);
+      moneys.insert(0, money);
+    });
   }
 }
