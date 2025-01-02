@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:duitgone2/models/money.dart';
 import 'package:duitgone2/screens/about/about.dart';
+import 'package:duitgone2/screens/add_record/add_record.dart';
 import 'package:duitgone2/screens/home/money_list.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,10 @@ class Home extends StatelessWidget {
       appBar: _createAppBar(context),
       drawer: _createDrawer(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => AddRecord()));
+        },
         child: Icon(
           Icons.add,
           size: 32,
