@@ -24,7 +24,13 @@ class MoneyList extends StatelessWidget {
               subtitle: Text(
                 DateFormat("hh:mm a").format(money.date),
               ),
-              trailing: Text(money.amount.toStringAsFixed(2)),
+              trailing: Text(
+                money.amount.toStringAsFixed(2),
+                style: TextStyle(
+                  fontSize: 20,
+                  color: money.amount > 0 ? Colors.green : Colors.red,
+                ),
+              ),
             ),
         ],
       ),
