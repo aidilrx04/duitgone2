@@ -151,7 +151,7 @@ class Home extends StatelessWidget {
     return moneys.map((money) {
       return PieChartSectionData(
         value: money.amount.abs(),
-        title: money.category,
+        title: money.category.label,
         titlePositionPercentageOffset: 1,
         color: colors[Random().nextInt(colors.length)],
         radius: 100,

@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:duitgone2/models/category.dart';
+
 class Money {
   final double amount;
-  final String category;
+  final Category category;
   final DateTime date;
 
   const Money({
@@ -14,15 +16,7 @@ class Money {
   static List<Money> generateMockData({double total = 10}) {
     final random = Random();
 
-    const categories = [
-      "Breakfast",
-      "Lunch",
-      "Dinner",
-      "Grocery",
-      "Hygiene",
-      "Subscription",
-      "Others"
-    ];
+    final categories = Category.generateMockData();
 
     const min = -25.0;
     const max = 25.0;
