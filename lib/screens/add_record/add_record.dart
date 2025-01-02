@@ -1,11 +1,11 @@
 import 'package:duitgone2/models/category.dart';
-import 'package:duitgone2/models/money.dart';
+import 'package:duitgone2/models/transaction.dart';
 import 'package:flutter/material.dart';
 
 class AddRecord extends StatefulWidget {
   const AddRecord({super.key, this.onRecordAdded});
 
-  final void Function(Money)? onRecordAdded;
+  final void Function(Transaction)? onRecordAdded;
 
   @override
   State<AddRecord> createState() => _AddRecordState();
@@ -91,7 +91,7 @@ class _AddRecordState extends State<AddRecord> {
               width: double.infinity,
               height: 40,
               child: ElevatedButton(
-              onPressed: _onAddBtnTap(context),
+                onPressed: _onAddBtnTap(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                 ),
@@ -110,8 +110,8 @@ class _AddRecordState extends State<AddRecord> {
     );
   }
 
-  Money _createMoney(double amount, Category cat) {
-    return Money(amount: amount, category: cat, date: DateTime.now());
+  Transaction _createTransaction(double amount, Category cat) {
+    return Transaction(amount: amount, category: cat, date: DateTime.now());
   }
 
   _onAddBtnTap(BuildContext context) {
@@ -120,7 +120,7 @@ class _AddRecordState extends State<AddRecord> {
 
       if (widget.onRecordAdded != null) {
         widget.onRecordAdded!(
-          _createMoney(
+          _createTransaction(
             double.parse(amount.text),
             selectedCat!,
           ),
@@ -128,5 +128,4 @@ class _AddRecordState extends State<AddRecord> {
       }
     };
   }
-
 }

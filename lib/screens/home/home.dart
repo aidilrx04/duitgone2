@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:duitgone2/models/money.dart';
+import 'package:duitgone2/models/transaction.dart';
 import 'package:duitgone2/screens/about/about.dart';
 import 'package:duitgone2/screens/add_record/add_record.dart';
-import 'package:duitgone2/screens/home/money_list.dart';
+import 'package:duitgone2/screens/home/transaction_list.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -16,12 +16,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late List<Money> moneys;
+  late List<Transaction> transactions;
 
   @override
   void initState() {
     super.initState();
-    moneys = Money.generateMockData();
+    transactions = Transaction.generateMockData();
   }
 
   @override
@@ -34,7 +34,7 @@ class _HomeState extends State<Home> {
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => AddRecord(
-                    onRecordAdded: _addMoney,
+                    onRecordAdded: _addTransaction,
                   )));
         },
         child: Icon(
@@ -50,7 +50,7 @@ class _HomeState extends State<Home> {
             child: PieChart(
               duration: Duration(milliseconds: 250),
               PieChartData(
-                sections: _createSections(moneys),
+                sections: _createSections(transactions),
                 centerSpaceRadius: 0,
               ),
             ),
@@ -60,7 +60,7 @@ class _HomeState extends State<Home> {
           ),
           Center(
             child: Text(
-              moneys
+              transactions
                   .map((mon) => mon.amount)
                   .reduce((acc, val) => acc + val)
                   .toStringAsFixed(2),
@@ -71,8 +71,8 @@ class _HomeState extends State<Home> {
             height: 10,
           ),
           Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: MoneyList(moneys: moneys),
+            padding: EdgeInsets.all(20.0),
+            child: TransactionList(transactions: transactions),
           ),
         ],
       ),
@@ -141,7 +141,7 @@ class _HomeState extends State<Home> {
         }),
       );
 
-  List<PieChartSectionData> _createSections(List<Money> moneys) {
+  List<PieChartSectionData> _createSections(List<Transaction> transactions) {
     const colors = [
       Colors.red,
       Colors.pink,
@@ -165,10 +165,10 @@ class _HomeState extends State<Home> {
       Colors.black,
       Colors.white,
     ];
-    return moneys.map((money) {
+    return transactions.map((transaction) {
       return PieChartSectionData(
-        value: money.amount.abs(),
-        title: money.category.label,
+        value: transaction.amount.abs(),
+        title: transaction.category.label,
         titlePositionPercentageOffset: 1,
         color: colors[Random().nextInt(colors.length)],
         radius: 100,
@@ -176,10 +176,10 @@ class _HomeState extends State<Home> {
     }).toList();
   }
 
-  void _addMoney(Money money) {
+  void _addTransaction(Transaction transaction) {
     setState(() {
-      print(money.category.label);
-      moneys.insert(0, money);
+      print(transaction.category.label);
+      transactions.insert(0, transaction);
     });
   }
 }

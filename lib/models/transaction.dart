@@ -2,18 +2,18 @@ import 'dart:math';
 
 import 'package:duitgone2/models/category.dart';
 
-class Money {
+class Transaction {
   final double amount;
   final Category category;
   final DateTime date;
 
-  const Money({
+  const Transaction({
     required this.amount,
     required this.category,
     required this.date,
   });
 
-  static List<Money> generateMockData({double total = 10}) {
+  static List<Transaction> generateMockData({double total = 10}) {
     final random = Random();
 
     final categories = Category.generateMockData();
@@ -21,7 +21,7 @@ class Money {
     const min = -25.0;
     const max = 25.0;
 
-    final moneys = <Money>[];
+    final transactions = <Transaction>[];
 
     for (var i = 0; i < total; i++) {
       final category = categories[random.nextInt(categories.length)];
@@ -35,10 +35,10 @@ class Money {
         random.nextInt(59),
       );
 
-      final money = Money(amount: amount, category: category, date: date);
+      final transaction = Transaction(amount: amount, category: category, date: date);
 
-      moneys.add(money);
+      transactions.add(transaction);
     }
-    return moneys;
+    return transactions;
   }
 }

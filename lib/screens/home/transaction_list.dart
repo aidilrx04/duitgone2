@@ -1,14 +1,14 @@
-import 'package:duitgone2/models/money.dart';
+import 'package:duitgone2/models/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class MoneyList extends StatelessWidget {
-  const MoneyList({
+class TransactionList extends StatelessWidget {
+  const TransactionList({
     super.key,
-    required this.moneys,
+    required this.transactions,
   });
 
-  final List<Money> moneys;
+  final List<Transaction> transactions;
 
   @override
   Widget build(BuildContext context) {
@@ -16,19 +16,19 @@ class MoneyList extends StatelessWidget {
       color: Colors.white,
       child: Column(
         children: [
-          for (final money in moneys)
+          for (final transaction in transactions)
             ListTile(
               title: Text(
-                money.category.label,
+                transaction.category.label,
               ),
               subtitle: Text(
-                DateFormat("hh:mm a").format(money.date),
+                DateFormat("hh:mm a").format(transaction.date),
               ),
               trailing: Text(
-                money.amount.toStringAsFixed(2),
+                transaction.amount.toStringAsFixed(2),
                 style: TextStyle(
                   fontSize: 20,
-                  color: money.amount > 0 ? Colors.green : Colors.red,
+                  color: transaction.amount > 0 ? Colors.green : Colors.red,
                 ),
               ),
             ),
