@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
-  static const title = "duitGone2";
+  static const title = "duitGone2_";
 
   @override
   State<Home> createState() => _HomeState();
