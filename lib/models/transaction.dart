@@ -1,13 +1,15 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:duitgone2/models/category.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Transaction {
-  final double amount;
-  final Category category;
-  final DateTime date;
+  late double amount;
+  late String category;
+  late DateTime date;
 
-  const Transaction({
+  Transaction({
     required this.amount,
     required this.category,
     required this.date,
@@ -35,10 +37,53 @@ class Transaction {
         random.nextInt(59),
       );
 
-      final transaction = Transaction(amount: amount, category: category, date: date);
+      final transaction =
+          Transaction(amount: amount, category: category, date: date);
 
       transactions.add(transaction);
     }
     return transactions;
+  }
+
+  static Future<List<Transaction>> getData() async {
+    // get all data stored locally
+    final prefs = await SharedPreferences.getInstance();
+
+    final list = prefs.getStringList("transactions");
+
+    if (list == null) return [];
+
+    return list.map(Transaction.fromString).toList();
+  }
+
+  static Future<bool> save(Transaction t) async {
+    final String json = jsonEncode(t);
+
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.setStringList(
+        "transactions", [json, ...?prefs.getStringList("transactions")]);
+
+    return true;
+  }
+
+  Map<String, dynamic> get asMap {
+    return {
+      "amount": amount,
+      "category": category,
+      "date": date.toString(),
+    };
+  }
+
+  Map<String, dynamic> toJson() {
+    return asMap;
+  }
+
+  Transaction.fromString(String string) {
+    final json = jsonDecode(string);
+
+    amount = (json['amount'] as num).toDouble();
+    category = json['category'];
+    date = DateTime.parse(json['date']);
   }
 }

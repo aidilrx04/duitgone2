@@ -19,7 +19,7 @@ class TransactionList extends StatelessWidget {
           for (final transaction in transactions)
             ListTile(
               title: Text(
-                transaction.category.label,
+                transaction.category,
               ),
               subtitle: Text(
                 DateFormat("hh:mm a").format(transaction.date),

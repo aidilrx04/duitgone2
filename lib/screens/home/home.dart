@@ -17,12 +17,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late List<Transaction> transactions;
+  List<Transaction>? transactions;
 
   @override
   void initState() {
     super.initState();
-    transactions = Transaction.generateMockData();
+    Transaction.getData().then((val) {
+      setState(() {
+        transactions = val;
+      });
+    });
   }
 
   @override
@@ -43,43 +47,45 @@ class _HomeState extends State<Home> {
           size: 32,
         ),
       ),
-      body: ListView(
-        children: [
-          SizedBox(
-            height: 300,
-            width: double.infinity,
-            child: PieChart(
-              duration: Duration(milliseconds: 250),
-              PieChartData(
-                sections: _createSections(transactions),
-                centerSpaceRadius: 0,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Center(
-            child: Text(
-              transactions
-                  .map((mon) => mon.amount)
-                  .reduce((acc, val) => acc + val)
-                  .toStringAsFixed(2),
-              style: TextStyle(fontSize: 26),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: EdgeInsets.all(20.0),
-            child: TransactionList(transactions: transactions),
-          ),
-          SizedBox(
-            height: 60,
-          )
-        ],
-      ),
+      body: transactions != null
+          ? ListView(
+              children: [
+                SizedBox(
+                  height: 300,
+                  width: double.infinity,
+                  child: PieChart(
+                    duration: Duration(milliseconds: 250),
+                    PieChartData(
+                      sections: _createSections(transactions!),
+                      centerSpaceRadius: 0,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Center(
+                  child: Text(
+                    transactions!
+                        .map((mon) => mon.amount)
+                        .fold(0.0, (acc, val) => acc + val)
+                        .toStringAsFixed(2),
+                    style: TextStyle(fontSize: 26),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: TransactionList(transactions: transactions!),
+                ),
+                SizedBox(
+                  height: 60,
+                )
+              ],
+            )
+          : Text("Loading..."),
     );
   }
 
@@ -175,7 +181,7 @@ class _HomeState extends State<Home> {
     return groups.entries.map((entry) {
       return PieChartSectionData(
         value: entry.value,
-        title: entry.key.label,
+        title: entry.key,
         titlePositionPercentageOffset: 1,
         color: colors[Random().nextInt(colors.length)],
         radius: 100,
@@ -185,15 +191,17 @@ class _HomeState extends State<Home> {
 
   void _addTransaction(Transaction transaction) {
     setState(() {
-      print(transaction.category.label);
-      transactions.insert(0, transaction);
+      transactions!.insert(0, transaction);
+
+      // save transactions
+      Transaction.save(transaction);
     });
   }
 
-  Map<Category, double> _groupTransactionByCategory(
+  Map<String, double> _groupTransactionByCategory(
     List<Transaction> transactions,
   ) {
-    Map<Category, double> group = {};
+    Map<String, double> group = {};
 
     for (final trans in transactions) {
       if (group[trans.category] != null) {

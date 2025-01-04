@@ -13,9 +13,9 @@ class AddRecord extends StatefulWidget {
 }
 
 class _AddRecordState extends State<AddRecord> {
-  Category? selectedCat;
+  String? selectedCat;
 
-  late List<Category> categories;
+  late List<String> categories;
   final amount = TextEditingController(text: "0");
   bool hasLoaded = false;
   bool isAmountValid = true;
@@ -108,14 +108,14 @@ class _AddRecordState extends State<AddRecord> {
               children: [
                 for (final category in categories)
                   ChoiceChip(
-                    label: Text(category.label),
+                    label: Text(category),
                     avatar: Text(""),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(9999),
                       ),
                     ),
-                    selected: category.label == selectedCat?.label,
+                    selected: category == selectedCat,
                     onSelected: (selected) {
                       if (selected) {
                         setState(() {
@@ -164,7 +164,7 @@ class _AddRecordState extends State<AddRecord> {
     );
   }
 
-  Transaction _createTransaction(double amount, Category cat) {
+  Transaction _createTransaction(double amount, String cat) {
     return Transaction(amount: amount, category: cat, date: DateTime.now());
   }
 

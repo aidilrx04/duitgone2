@@ -1,18 +1,30 @@
+import 'dart:convert';
+
 class Category {
-  final String label;
-  final String? icon;
+  late String label;
 
-  Category({required this.label, this.icon});
+  Category({required this.label});
 
-  static List<Category> generateMockData() {
-    return <Category>[
-      Category(label: "Breakfast"),
-      Category(label: "Lunch"),
-      Category(label: "Dinner"),
-      Category(label: "Grocery"),
-      Category(label: "Hygiene"),
-      Category(label: "Subscription"),
-      Category(label: "Others"),
+  static List<String> generateMockData() {
+    return <String>[
+      "Breakfast",
+      "Lunch",
+      "Dinner",
+      "Grocery",
+      "Hygiene",
+      "Subscription",
+      "Others",
     ];
+  }
+
+  Map<String, dynamic> get asMap {
+    return {
+      "label": label,
+    };
+  }
+
+  Category.fromString(String string) {
+    final json = jsonDecode(string);
+    label = json['label'];
   }
 }
