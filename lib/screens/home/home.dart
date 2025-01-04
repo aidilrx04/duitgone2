@@ -31,6 +31,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final Widget body =
+        transactions != null ? _createHomeDetail() : Text("Loading...");
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       appBar: _createAppBar(context),
@@ -47,45 +50,47 @@ class _HomeState extends State<Home> {
           size: 32,
         ),
       ),
-      body: transactions != null
-          ? ListView(
-              children: [
-                SizedBox(
-                  height: 300,
-                  width: double.infinity,
-                  child: PieChart(
-                    duration: Duration(milliseconds: 250),
-                    PieChartData(
-                      sections: _createSections(transactions!),
-                      centerSpaceRadius: 0,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Center(
-                  child: Text(
-                    transactions!
-                        .map((mon) => mon.amount)
-                        .fold(0.0, (acc, val) => acc + val)
-                        .toStringAsFixed(2),
-                    style: TextStyle(fontSize: 26),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: TransactionList(transactions: transactions!),
-                ),
-                SizedBox(
-                  height: 60,
-                )
-              ],
-            )
-          : Text("Loading..."),
+      body: body,
+    );
+  }
+
+  ListView _createHomeDetail() {
+    return ListView(
+      children: [
+        SizedBox(
+          height: 300,
+          width: double.infinity,
+          child: PieChart(
+            duration: Duration(milliseconds: 250),
+            PieChartData(
+              sections: _createSections(transactions!),
+              centerSpaceRadius: 0,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Center(
+          child: Text(
+            transactions!
+                .map((mon) => mon.amount)
+                .fold(0.0, (acc, val) => acc + val)
+                .toStringAsFixed(2),
+            style: TextStyle(fontSize: 26),
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Padding(
+          padding: EdgeInsets.all(20.0),
+          child: TransactionList(transactions: transactions!),
+        ),
+        SizedBox(
+          height: 60,
+        )
+      ],
     );
   }
 
