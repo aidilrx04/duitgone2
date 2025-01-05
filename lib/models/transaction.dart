@@ -117,6 +117,21 @@ class Transaction {
     return true;
   }
 
+  static Future<bool> saveTransactionsByDay(
+      DateTime date, List<Transaction> transactions) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final dateString = DateFormat("yyyy-MM-dd").format(date);
+
+    _data[dateString] = transactions;
+
+    final json = jsonEncode(_data);
+
+    prefs.setString("transactions", json);
+
+    return true;
+  }
+
   Map<String, dynamic> get asMap {
     return {
       "amount": amount,
