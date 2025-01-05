@@ -63,7 +63,9 @@ class _HomeState extends State<Home> {
           child: PieChart(
             duration: Duration(milliseconds: 250),
             PieChartData(
-              sections: _createSections(transactions!),
+              sections: transactions!.length > 0
+                  ? _createSections(transactions!)
+                  : _createEmptyPieSection(),
               centerSpaceRadius: 0,
             ),
           ),
@@ -218,5 +220,17 @@ class _HomeState extends State<Home> {
     }
 
     return group;
+  }
+
+  List<PieChartSectionData> _createEmptyPieSection() {
+    return [
+      PieChartSectionData(
+        value: 100,
+        color: Colors.black12,
+        title: "No Data",
+        radius: 130,
+        titlePositionPercentageOffset: 0,
+      ),
+    ];
   }
 }
