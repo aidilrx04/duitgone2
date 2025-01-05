@@ -17,6 +17,7 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -42,39 +43,38 @@ class TransactionList extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(
-          height: 200,
-          child: Card(
-            color: Colors.white,
-            child: Column(
-              children: [
-                if (transactions.length == 0)
-                  Expanded(
-                      child: Center(
+        Card(
+          color: Colors.white,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (transactions.isEmpty)
+                ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: 200),
+                  child: Center(
                     child: Text(
                       "No transaction today",
                       style: TextStyle(color: Colors.black45),
                     ),
-                  )),
-                for (final transaction in transactions)
-                  ListTile(
-                    title: Text(
-                      transaction.category,
-                    ),
-                    subtitle: Text(
-                      DateFormat("hh:mm a").format(transaction.date),
-                    ),
-                    trailing: Text(
-                      transaction.amount.toStringAsFixed(2),
-                      style: TextStyle(
-                        fontSize: 20,
-                        color:
-                            transaction.amount > 0 ? Colors.green : Colors.red,
-                      ),
+                  ),
+                ),
+              for (final transaction in transactions)
+                ListTile(
+                  title: Text(
+                    transaction.category,
+                  ),
+                  subtitle: Text(
+                    DateFormat("hh:mm a").format(transaction.date),
+                  ),
+                  trailing: Text(
+                    transaction.amount.toStringAsFixed(2),
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: transaction.amount > 0 ? Colors.green : Colors.red,
                     ),
                   ),
-              ],
-            ),
+                ),
+            ],
           ),
         ),
       ],
