@@ -1,4 +1,5 @@
 import 'package:duitgone2/models/transaction.dart';
+import 'package:duitgone2/screens/edit_transactions/edit_transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -18,7 +19,17 @@ class TransactionList extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditTransactions(
+                              transactions: transactions,
+                              onSaveTap: (List<Transaction> list) {
+                                list.map((v) => v.asMap).forEach(print);
+                              },
+                            )));
+              },
               icon: Icon(
                 Icons.edit,
                 size: 20,
