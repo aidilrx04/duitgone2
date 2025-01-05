@@ -24,13 +24,6 @@ class _EditTransactionsState extends State<EditTransactions> {
   void initState() {
     super.initState();
     categories = Category.generateMockData();
-    inEdit.add(widget.transactions[0]);
-    editted[widget.transactions[0]] = Transaction(
-        amount: widget.transactions[0].amount,
-        category: widget.transactions[0].category,
-        date: widget.transactions[0].date);
-    editted[widget.transactions[1]] = Transaction(
-        amount: 10, category: "Grocery", date: widget.transactions[1].date);
   }
 
   @override
