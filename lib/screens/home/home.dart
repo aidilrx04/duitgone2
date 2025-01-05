@@ -29,7 +29,6 @@ class _HomeState extends State<Home> {
     Transaction.loadData().then((val) {
       setState(() {
         transactions = Transaction.getDataDay(date);
-        dates = Transaction.getDates();
       });
     });
   }
@@ -61,7 +60,7 @@ class _HomeState extends State<Home> {
 
   ListView _createHomeDetail() {
     return ListView(
-      children: [ 
+      children: [
         SizedBox(
           height: 300,
           width: double.infinity,
