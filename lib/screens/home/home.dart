@@ -17,14 +17,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Transaction>? transactions;
+  List<Transaction>? transactions = [];
 
   @override
   void initState() {
     super.initState();
-    Transaction.getData().then((val) {
+    Transaction.loadData().then((val) {
       setState(() {
-        transactions = val;
+        transactions = Transaction.getDataDay(DateTime.now());
       });
     });
   }

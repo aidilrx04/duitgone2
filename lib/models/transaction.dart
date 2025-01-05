@@ -2,7 +2,25 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:duitgone2/models/category.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+///
+/// Transactions data structure in storage
+/// "transactions": {
+/// "YYYY-mm-dd": [
+///   {
+///   "amount": 10.00,
+///   "category": "Category Label",
+///   "date": "YYYY-mm-dd HH:mm:ss"
+///   },
+///   ...
+/// ],
+/// ...
+/// }
+///
+
+typedef Entry = MapEntry<String, List<Map<String, dynamic>>>;
 
 class Transaction {
   late double amount;
@@ -45,24 +63,56 @@ class Transaction {
     return transactions;
   }
 
-  static Future<List<Transaction>> getData() async {
+  static Map<String, List<Transaction>> _data = {};
+
+  /// Get all transactions data in local storage
+  /// Return format should Map<String, List<Transaction>>
+  static Future<void> loadData() async {
     // get all data stored locally
     final prefs = await SharedPreferences.getInstance();
 
-    final list = prefs.getStringList("transactions");
+    final list = prefs.getString("transactions");
 
-    if (list == null) return [];
+    if (list == null) return;
 
-    return list.map(Transaction.fromString).toList();
+    var data = jsonDecode(list) as Map<String, dynamic>;
+
+    final Map<String, List<Transaction>> mapped = {};
+
+    for (final entry in data.entries) {
+      mapped[entry.key] = (entry.value as List).map((map) {
+        return Transaction.fromString(jsonEncode(map));
+      }).toList();
+    }
+
+    _data = mapped;
+  }
+
+  static List<Transaction> getDataDay(DateTime date) {
+    final String dateString = DateFormat("yyyy-MM-dd").format(date);
+
+    final List<Transaction>? transactions = _data[dateString];
+
+    if (transactions == null) return [];
+
+    return transactions;
   }
 
   static Future<bool> save(Transaction t) async {
-    final String json = jsonEncode(t);
-
     final prefs = await SharedPreferences.getInstance();
 
-    prefs.setStringList(
-        "transactions", [json, ...?prefs.getStringList("transactions")]);
+    final date = DateFormat("yyyy-MM-dd").format(t.date);
+
+    _data[date] = [
+      t,
+      ...?_data[date],
+    ];
+
+    final String json = jsonEncode(_data);
+
+    prefs.setString("transactions", json);
+    // prefs.setStringList(
+    //     "transactions", [json, ...?prefs.getStringList("transactions")]);
 
     return true;
   }
