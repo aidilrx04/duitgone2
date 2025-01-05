@@ -17,14 +17,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Transaction>? transactions = [];
+  List<Transaction>? transactions;
+
+  DateTime date = DateTime.now();
 
   @override
   void initState() {
     super.initState();
     Transaction.loadData().then((val) {
       setState(() {
-        transactions = Transaction.getDataDay(DateTime.now());
+        transactions = Transaction.getDataDay(date);
       });
     });
   }
@@ -87,13 +89,24 @@ class _HomeState extends State<Home> {
         ),
         Padding(
           padding: EdgeInsets.all(20.0),
-          child: TransactionList(transactions: transactions!),
+          child: TransactionList(
+            transactions: transactions!,
+            onDataUpdated: _onTransactionsUpdated,
+          ),
         ),
         SizedBox(
           height: 60,
         )
       ],
     );
+  }
+
+  void _onTransactionsUpdated(List<Transaction> _transactions) {
+    Transaction.saveTransactionsByDay(date, _transactions).then((val) {
+      setState(() {
+        transactions = _transactions;
+      });
+    });
   }
 
   Drawer _createDrawer() => Drawer(

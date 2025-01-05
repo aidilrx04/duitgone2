@@ -7,9 +7,12 @@ class TransactionList extends StatelessWidget {
   const TransactionList({
     super.key,
     required this.transactions,
+    required this.onDataUpdated,
   });
 
   final List<Transaction> transactions;
+
+  final void Function(List<Transaction>) onDataUpdated;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,7 @@ class TransactionList extends StatelessWidget {
                               builder: (context) => EditTransactions(
                                     transactions: transactions,
                                     onSaveTap: (List<Transaction> list) {
-                                      list.map((v) => v.asMap).forEach(print);
+                                      onDataUpdated(list);
                                     },
                                   )));
                     }
