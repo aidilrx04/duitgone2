@@ -75,7 +75,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         SizedBox(
-          height: 10,
+          height: 4,
         ),
         Center(
           child: Text(
@@ -87,10 +87,10 @@ class _HomeState extends State<Home> {
           ),
         ),
         SizedBox(
-          height: 10,
+          height: 4,
         ),
         Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: TransactionList(
             transactions: transactions!,
             onDataUpdated: _onTransactionsUpdated,
