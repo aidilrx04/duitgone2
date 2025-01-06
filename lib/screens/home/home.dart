@@ -5,6 +5,7 @@ import 'package:duitgone2/models/transaction.dart';
 import 'package:duitgone2/screens/about/about.dart';
 import 'package:duitgone2/screens/add_record/add_record.dart';
 import 'package:duitgone2/screens/home/date_select_bar.dart';
+import 'package:duitgone2/screens/home/home_drawer.dart';
 import 'package:duitgone2/screens/home/transaction_list.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       appBar: _createAppBar(context),
-      drawer: _createDrawer(),
+      drawer: HomeDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
@@ -122,47 +123,6 @@ class _HomeState extends State<Home> {
       });
     });
   }
-
-  Drawer _createDrawer() => Drawer(
-        child: Builder(builder: (context) {
-          return ListView(
-            children: [
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      Home.title,
-                      style: TextStyle(
-                        fontSize: 26,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              ListTile(
-                onTap: () {
-                  Scaffold.of(context).closeDrawer();
-                },
-                leading: Icon(Icons.home_outlined),
-                title: Text("Dashboard"),
-              ),
-              ListTile(
-                onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => About()));
-                },
-                leading: Icon(Icons.info_outlined),
-                title: Text("About"),
-              ),
-            ],
-          );
-        }),
-      );
 
   AppBar _createAppBar(BuildContext context) => AppBar(
         title: Text(
