@@ -9,43 +9,41 @@ class HomeDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Drawer(
-        child: Builder(builder: (context) {
-          return ListView(
-            children: [
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      Home.title,
-                      style: TextStyle(
-                        fontSize: 26,
-                        color: Colors.white,
-                      ),
+        child: ListView(
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.orange,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    Home.title,
+                    style: TextStyle(
+                      fontSize: 26,
+                      color: Colors.white,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              ListTile(
-                onTap: () {
-                  Scaffold.of(context).closeDrawer();
-                },
-                leading: Icon(Icons.home_outlined),
-                title: Text("Dashboard"),
-              ),
-              ListTile(
-                onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => About()));
-                },
-                leading: Icon(Icons.info_outlined),
-                title: Text("About"),
-              ),
-            ],
-          );
-        }),
+            ),
+            ListTile(
+              onTap: () {
+                Scaffold.of(context).closeDrawer();
+              },
+              leading: Icon(Icons.home_outlined),
+              title: Text("Dashboard"),
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => About()));
+              },
+              leading: Icon(Icons.info_outlined),
+              title: Text("About"),
+            ),
+          ],
+        ),
       );
 }
