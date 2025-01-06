@@ -4,6 +4,7 @@ import 'package:duitgone2/models/category.dart';
 import 'package:duitgone2/models/transaction.dart';
 import 'package:duitgone2/screens/about/about.dart';
 import 'package:duitgone2/screens/add_record/add_record.dart';
+import 'package:duitgone2/screens/home/date_select_bar.dart';
 import 'package:duitgone2/screens/home/transaction_list.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class _HomeState extends State<Home> {
     Transaction.loadData().then((val) {
       setState(() {
         transactions = Transaction.getDataDay(date);
+        dates = Transaction.getDates();
       });
     });
   }
@@ -61,8 +63,18 @@ class _HomeState extends State<Home> {
   ListView _createHomeDetail() {
     return ListView(
       children: [
+        DateSelectBar(
+          currentDate: date,
+          availables: dates!,
+          onDateSelected: (String selectedDate) {
+            setState(() {
+              date = DateTime.parse(selectedDate);
+              transactions = Transaction.getDataDay(date);
+            });
+          },
+        ),
         SizedBox(
-          height: 300,
+          height: 250,
           width: double.infinity,
           child: PieChart(
             duration: Duration(milliseconds: 250),

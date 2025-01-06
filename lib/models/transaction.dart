@@ -98,6 +98,10 @@ class Transaction {
     return transactions;
   }
 
+  static List<String> getDates() {
+    return _data.entries.map((entry) => entry.key).toList();
+  }
+
   static Future<bool> save(Transaction t) async {
     final prefs = await SharedPreferences.getInstance();
 
