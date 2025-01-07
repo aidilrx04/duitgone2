@@ -1,8 +1,6 @@
 import 'dart:math';
 
-import 'package:duitgone2/models/category.dart';
 import 'package:duitgone2/models/transaction.dart';
-import 'package:duitgone2/screens/about/about.dart';
 import 'package:duitgone2/screens/add_record/add_record.dart';
 import 'package:duitgone2/screens/home/date_select_bar.dart';
 import 'package:duitgone2/screens/home/home_drawer.dart';
@@ -80,7 +78,7 @@ class _HomeState extends State<Home> {
           child: PieChart(
             duration: Duration(milliseconds: 250),
             PieChartData(
-              sections: transactions!.length > 0
+              sections: transactions!.isNotEmpty
                   ? _createSections(transactions!)
                   : _createEmptyPieSection(),
               centerSpaceRadius: 0,
@@ -116,10 +114,10 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void _onTransactionsUpdated(List<Transaction> _transactions) {
-    Transaction.saveTransactionsByDay(date, _transactions).then((val) {
+  void _onTransactionsUpdated(List<Transaction> updatedTransactions) {
+    Transaction.saveTransactionsByDay(date, updatedTransactions).then((val) {
       setState(() {
-        transactions = _transactions;
+        transactions = updatedTransactions;
       });
     });
   }

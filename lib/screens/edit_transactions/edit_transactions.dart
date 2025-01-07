@@ -1,5 +1,6 @@
 import 'package:duitgone2/models/category.dart';
 import 'package:duitgone2/models/transaction.dart';
+import 'package:duitgone2/screens/edit_transactions/edit_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -18,7 +19,6 @@ class _EditTransactionsState extends State<EditTransactions> {
   List<Transaction> inEdit = [];
   Map<Transaction, Transaction> editted = {};
   late List<String> categories;
-  Map<Transaction, String> currentSelectedCat = {};
 
   @override
   void initState() {
@@ -28,7 +28,6 @@ class _EditTransactionsState extends State<EditTransactions> {
 
   @override
   Widget build(BuildContext context) {
-    print(editted);
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Transactions"),
@@ -68,95 +67,16 @@ class _EditTransactionsState extends State<EditTransactions> {
     );
   }
 
-  SizedBox _showEditTile(Transaction ori, Transaction? edit) {
-    final transaction = (edit ?? ori);
-    final amountController =
-        TextEditingController(text: transaction.amount.toStringAsFixed(2));
-    return SizedBox(
-      width: double.infinity,
-      child: Container(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Edit ${transaction.category} | ${transaction.amount.toStringAsFixed(2)}",
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          print(amountController.text);
-                          editted[ori] = Transaction(
-                              amount: double.parse(amountController.text),
-                              category: transaction.category,
-                              date: transaction.date);
-                          currentSelectedCat.remove(ori);
-                          inEdit.remove(ori);
-                        });
-                      },
-                      icon: Icon(Icons.check),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          inEdit.remove(ori);
-                        });
-                      },
-                      icon: Icon(Icons.close),
-                    )
-                  ],
-                )
-              ],
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            TextField(
-              controller: amountController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Amount",
-              ),
-              onChanged: (value) {
-                edit!.amount = double.parse(value);
-              },
-              onTapOutside: (ev) {
-                setState(() {
-                  edit!.amount = edit.amount;
-                });
-              },
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Wrap(
-              spacing: 5,
-              runSpacing: 5,
-              alignment: WrapAlignment.start,
-              children: [
-                for (final category in categories)
-                  ChoiceChip(
-                    label: Text(category),
-                    selected: transaction.category == category,
-                    onSelected: (selected) {
-                      setState(() {
-                        editted[ori]!.category = category;
-                      });
-                    },
-                  )
-              ],
-            )
-          ],
-        ),
-      ),
+  Widget _showEditTile(Transaction transaction, Transaction? edit) {
+    return EditTile(
+      transaction: edit ?? transaction,
+      categories: categories,
+      onAcceptTapped: (Transaction updated) {
+        _addUpdatedTransaction(transaction, updated);
+      },
+      onCancelTapped: () {
+        _removeInEdit(transaction);
+      },
     );
   }
 
@@ -198,5 +118,18 @@ class _EditTransactionsState extends State<EditTransactions> {
         ),
       ),
     );
+  }
+
+  void _addUpdatedTransaction(Transaction original, Transaction updated) {
+    setState(() {
+      editted[original] = updated;
+      inEdit.remove(original);
+    });
+  }
+
+  void _removeInEdit(Transaction transaction) {
+    setState(() {
+      inEdit.remove(transaction);
+    });
   }
 }

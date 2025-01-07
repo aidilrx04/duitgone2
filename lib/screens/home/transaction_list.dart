@@ -23,17 +23,20 @@ class TransactionList extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             IconButton(
-              onPressed: transactions.length > 0
+              onPressed: transactions.isNotEmpty
                   ? () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EditTransactions(
-                                    transactions: transactions,
-                                    onSaveTap: (List<Transaction> list) {
-                                      onDataUpdated(list);
-                                    },
-                                  )));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditTransactions(
+                            transactions: transactions,
+                            onSaveTap: (List<Transaction> list) {
+                              onDataUpdated(list);
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      );
                     }
                   : null,
               icon: Icon(
