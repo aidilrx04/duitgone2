@@ -88,6 +88,10 @@ class Transaction {
     _data = mapped;
   }
 
+  static Map<String, List<Transaction>> getData() {
+    return _data;
+  }
+
   static List<Transaction> getDataDay(DateTime date) {
     final String dateString = DateFormat("yyyy-MM-dd").format(date);
 

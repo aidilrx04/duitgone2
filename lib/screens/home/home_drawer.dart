@@ -1,3 +1,6 @@
+import 'package:duitgone2/helpers/data_export/data_export.dart'
+    if (dart.library.html) 'package:duitgone2/helpers/data_export/html_data_export.dart'
+    if (dart.library.io) 'package:duitgone2/helpers/data_export/io_data_export.dart';
 import 'package:duitgone2/screens/about/about.dart';
 import 'package:duitgone2/screens/home/home.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +37,24 @@ class HomeDrawer extends StatelessWidget {
               },
               leading: Icon(Icons.home_outlined),
               title: Text("Dashboard"),
+            ),
+            ListTile(
+              onTap: () {
+                DataExport.exportData().then((val) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(val),
+                    ),
+                  );
+                }).catchError((err) {
+                  Scaffold.of(context).closeDrawer();
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(err.toString()),
+                  ));
+                });
+              },
+              title: Text("Export Data"),
+              leading: Icon(Icons.file_download_outlined),
             ),
             ListTile(
               onTap: () {
