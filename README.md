@@ -1,16 +1,10 @@
-# duitgone2
+# duitGone2
 
-A new Flutter project.
+duitGone2 is a simple finance manager where you record all your money expenses and can review where all your money 'gone' later
 
-## Getting Started
+## 🔥 Features
 
-This project is a starting point for a Flutter application.
+- Track daily expenses and income
+- View previous expenses and income
+- Export tracked data locally
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
