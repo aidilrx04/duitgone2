@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:duitgone2/helpers/data_export/data_export.dart' as stub;
@@ -6,7 +7,7 @@ import 'package:duitgone2/models/transaction.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class DataExport implements stub.DataExport {
+class DataExporter implements stub.DataExporter {
   static Future<String> exportData() async {
     await Transaction.loadData();
 
@@ -16,25 +17,17 @@ class DataExport implements stub.DataExport {
   static Future<String> getExternalDownloadPath() async {
     var status = await Permission.storage.status;
 
-    print(status);
     if (!status.isGranted) {
-      print("request permission");
+      log("Storage permission is not granted. Requesting permission...");
       await Permission.storage.request();
+      log("Request done. Is storage permission granted?: ${await Permission.storage.status}");
     }
-
-    print(status);
-
-    // if (!status.isGranted) {
-    //   throw Exception("No permission to write file.");
-    // }
 
     Directory? downloadDir = await getDownloadsDirectory();
 
     if (downloadDir == null) {
       throw Exception("Download path do not exist");
     }
-
-    print(downloadDir);
 
     return downloadDir.path;
   }

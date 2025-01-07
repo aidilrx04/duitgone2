@@ -40,7 +40,8 @@ class HomeDrawer extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                DataExport.exportData().then((val) {
+                DataExporter.exportData().then((val) {
+                  Scaffold.of(context).closeDrawer();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(val),

@@ -5,7 +5,7 @@ import 'package:duitgone2/models/transaction.dart';
 
 import 'dart:html' as html;
 
-class DataExport implements stub.DataExport {
+class DataExporter implements stub.DataExporter {
   static Future<String> exportData() async {
     await Transaction.loadData();
 
@@ -18,8 +18,6 @@ class DataExport implements stub.DataExport {
     if (filename == null) {
       throw Exception("No data to export");
     }
-
-    print(filename);
 
     final data = Transaction.getData();
 
