@@ -1,12 +1,12 @@
-import 'dart:math';
-
 import 'package:duitgone2/models/transaction.dart';
 import 'package:duitgone2/screens/add_record/add_record.dart';
 import 'package:duitgone2/screens/home/date_select_bar.dart';
 import 'package:duitgone2/screens/home/home_drawer.dart';
+import 'package:duitgone2/screens/home/transaction_chart.dart';
 import 'package:duitgone2/screens/home/transaction_list.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+
+enum ChartType { ALL, EXPENSE, INCOME }
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -72,18 +72,8 @@ class _HomeState extends State<Home> {
             });
           },
         ),
-        SizedBox(
-          height: 250,
-          width: double.infinity,
-          child: PieChart(
-            duration: Duration(milliseconds: 250),
-            PieChartData(
-              sections: transactions!.isNotEmpty
-                  ? _createSections(transactions!)
-                  : _createEmptyPieSection(),
-              centerSpaceRadius: 0,
-            ),
-          ),
+        TransactionChart(
+          transactions: transactions!,
         ),
         SizedBox(
           height: 4,
@@ -143,44 +133,6 @@ class _HomeState extends State<Home> {
         }),
       );
 
-  List<PieChartSectionData> _createSections(List<Transaction> transactions) {
-    const colors = [
-      Colors.red,
-      Colors.pink,
-      Colors.purple,
-      Colors.deepPurple,
-      Colors.indigo,
-      Colors.blue,
-      Colors.lightBlue,
-      Colors.cyan,
-      Colors.teal,
-      Colors.green,
-      Colors.lightGreen,
-      Colors.lime,
-      Colors.yellow,
-      Colors.amber,
-      Colors.orange,
-      Colors.deepOrange,
-      Colors.brown,
-      Colors.grey,
-      Colors.blueGrey,
-      Colors.black,
-      Colors.white,
-    ];
-
-    final groups = _groupTransactionByCategory(transactions);
-
-    return groups.entries.map((entry) {
-      return PieChartSectionData(
-        value: entry.value,
-        title: entry.key,
-        titlePositionPercentageOffset: 1,
-        color: colors[Random().nextInt(colors.length)],
-        radius: 100,
-      );
-    }).toList();
-  }
-
   void _addTransaction(Transaction transaction) {
     setState(() {
       transactions!.insert(0, transaction);
@@ -188,34 +140,5 @@ class _HomeState extends State<Home> {
       // save transactions
       Transaction.save(transaction);
     });
-  }
-
-  Map<String, double> _groupTransactionByCategory(
-    List<Transaction> transactions,
-  ) {
-    Map<String, double> group = {};
-
-    for (final trans in transactions) {
-      if (group[trans.category] != null) {
-        group[trans.category] = group[trans.category]! + trans.amount;
-        continue;
-      }
-
-      group[trans.category] = trans.amount;
-    }
-
-    return group;
-  }
-
-  List<PieChartSectionData> _createEmptyPieSection() {
-    return [
-      PieChartSectionData(
-        value: 100,
-        color: Colors.black12,
-        title: "No Data",
-        radius: 130,
-        titlePositionPercentageOffset: 0,
-      ),
-    ];
   }
 }
