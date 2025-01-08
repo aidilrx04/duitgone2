@@ -1,3 +1,3 @@
 @echo off
 
-flutter clean && flutter build apk && flutter build apk --split-per-abi
+flutter clean && flutter build apk && flutter build apk --split-per-abi && flutter build web
