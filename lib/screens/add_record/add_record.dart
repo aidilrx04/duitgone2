@@ -109,7 +109,6 @@ class _AddRecordState extends State<AddRecord> {
                 for (final category in categories)
                   ChoiceChip(
                     label: Text(category),
-                    avatar: Text(""),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(9999),
