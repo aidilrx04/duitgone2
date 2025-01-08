@@ -3,10 +3,7 @@ import 'dart:convert';
 class Category {
   late String label;
 
-  Category({required this.label});
-
-  static List<String> generateMockData() {
-    return <String>[
+  static const categories = <String>[
       "Breakfast",
       "Lunch",
       "Dinner",
@@ -15,6 +12,11 @@ class Category {
       "Subscription",
       "Others",
     ];
+
+  Category({required this.label});
+
+  static List<String> generateMockData() {
+    return categories;
   }
 
   Map<String, dynamic> get asMap {
