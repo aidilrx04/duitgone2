@@ -66,22 +66,24 @@ class _TransactionChartState extends State<TransactionChart> {
   }
 
   PieChart _createExpenseChart() {
+    final expenseTransactions = widget.transactions
+        .where(
+      (element) => element.amount < 0,
+    )
+        .map((element) {
+      return Transaction(
+        amount: element.amount.abs(),
+        category: element.category,
+        date: element.date,
+      );
+    }).toList();
+
     return PieChart(
       duration: Duration(milliseconds: 250),
       PieChartData(
         startDegreeOffset: 270,
-        sections: widget.transactions.isNotEmpty
-            ? _createSections(widget.transactions
-                .where(
-                (element) => element.amount < 0,
-              )
-                .map((element) {
-                return Transaction(
-                  amount: element.amount.abs(),
-                  category: element.category,
-                  date: element.date,
-                );
-              }).toList())
+        sections: expenseTransactions.isNotEmpty
+            ? _createSections(expenseTransactions)
             : _createEmptyPieSection(),
         centerSpaceRadius: 0,
       ),
@@ -165,15 +167,15 @@ class _TransactionChartState extends State<TransactionChart> {
   }
 
   PieChart _createIncomeChart() {
+    final incomeTransactions =
+        widget.transactions.where((element) => element.amount > 0).toList();
     return PieChart(
         duration: Duration(milliseconds: 250),
         PieChartData(
             startDegreeOffset: 270,
             centerSpaceRadius: 0,
-            sections: widget.transactions.isNotEmpty
-                ? _createSections(widget.transactions
-                    .where((element) => element.amount > 0)
-                    .toList())
+            sections: incomeTransactions.isNotEmpty
+                ? _createSections(incomeTransactions)
                 : _createEmptyPieSection()));
   }
 }
