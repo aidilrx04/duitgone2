@@ -42,4 +42,8 @@ class Category {
     final json = jsonDecode(string);
     label = json['label'];
   }
+
+  static Color getColor(String category) {
+    return colors[category] ?? defaultColor;
+  }
 }
