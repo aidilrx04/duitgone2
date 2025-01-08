@@ -60,6 +60,10 @@ class _AddRecordState extends State<AddRecord> {
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'^-?\d+\.?\d{0,2}'))
               ],
+              keyboardType: TextInputType.numberWithOptions(
+                decimal: true,
+                signed: true,
+              ),
               onChanged: (value) {
                 try {
                   double.parse(value);
