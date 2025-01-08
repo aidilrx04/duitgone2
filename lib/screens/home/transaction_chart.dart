@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'package:duitgone2/models/category.dart';
 import 'package:duitgone2/models/transaction.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -108,28 +108,6 @@ class _TransactionChartState extends State<TransactionChart> {
   }
 
   List<PieChartSectionData> _createSections(List<Transaction> transactions) {
-    const colors = [
-      Colors.red,
-      Colors.pink,
-      Colors.purple,
-      Colors.deepPurple,
-      Colors.indigo,
-      Colors.blue,
-      Colors.lightBlue,
-      Colors.cyan,
-      Colors.teal,
-      Colors.green,
-      Colors.lightGreen,
-      Colors.lime,
-      Colors.yellow,
-      Colors.amber,
-      Colors.orange,
-      Colors.deepOrange,
-      Colors.brown,
-      Colors.grey,
-      Colors.blueGrey,
-    ];
-
     // sort by largest
 
     var groups = _groupTransactionByCategory(transactions);
@@ -148,7 +126,7 @@ class _TransactionChartState extends State<TransactionChart> {
         value: entry.value,
         title: entry.key,
         titlePositionPercentageOffset: 1,
-        color: colors[Random().nextInt(colors.length)],
+        color: Category.getColor(entry.key),
         radius: 100,
       );
     }).toList();
