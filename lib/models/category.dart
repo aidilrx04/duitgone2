@@ -1,17 +1,30 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 class Category {
   late String label;
 
   static const categories = <String>[
-      "Breakfast",
-      "Lunch",
-      "Dinner",
-      "Grocery",
-      "Hygiene",
-      "Subscription",
-      "Others",
-    ];
+    "Breakfast",
+    "Lunch",
+    "Dinner",
+    "Grocery",
+    "Hygiene",
+    "Subscription",
+    "Others",
+  ];
+
+  static const defaultColor = Colors.white70;
+  static const colors = <String, Color>{
+    "Breakfast": Colors.teal,
+    "Lunch": Colors.pink,
+    "Dinner": Colors.deepPurple,
+    "Grocery": Colors.orange,
+    "Hygiene": Colors.yellow,
+    "Subscription": Colors.blue,
+    "Others": Colors.brown,
+  };
 
   Category({required this.label});
 
