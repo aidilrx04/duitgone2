@@ -53,4 +53,24 @@ class LocalStorage implements AbstractLocalStorage {
     file.writeAsStringSync(content);
     return true;
   }
+
+  @override
+  Future<List<String>> readFilesInDirectory(String path) async {
+    final Directory documentsDir = await getApplicationDocumentsDirectory();
+
+    final targetDir = Directory("${documentsDir.path}/$path");
+
+    if ((await targetDir.exists()) == false) return [];
+
+    final List<String> files = [];
+
+    targetDir.listSync().forEach((entity) {
+      if (entity is File) {
+        final filename = p.basename(entity.path);
+        files.add(filename);
+      }
+    });
+
+    return files;
+  }
 }
