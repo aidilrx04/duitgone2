@@ -10,4 +10,9 @@ class LocalStorage implements AbstractLocalStorage {
   Future<bool> write(String path, String content) {
     throw UnsupportedError("Platform not supported");
   }
+
+  @override
+  Future<List<String>> readFilesInDirectory(String path) {
+    throw UnsupportedError("Platform not supported");
+  }
 }

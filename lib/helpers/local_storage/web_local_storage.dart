@@ -27,4 +27,49 @@ class LocalStorage implements AbstractLocalStorage {
 
     return true;
   }
+
+  @override
+  Future<List<String>> readFilesInDirectory(String path) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final keys = prefs.getKeys();
+
+    // check if path contains separator at last
+    if (path.substring(path.length - 1) != "/") {
+      path = "$path/";
+    }
+
+    // check if path is root
+    if (path == "/") {
+      path = "";
+    }
+
+    final matchFilenameRe = RegExp("$path(.+)");
+
+    final roughMatches = <String>[];
+
+    // print("Path: $path");
+    for (final key in keys) {
+      final match = matchFilenameRe.firstMatch(key);
+
+      // print("Key: $key");
+      // print("Regex: ${match?.pattern}");
+      // print("Has Match: ${match != null ? true : false}");
+      // print("Matches: ${match?.group(1)}");
+      // print("\n\n");
+
+      if (match == null) continue;
+
+      roughMatches.add(match.group(1)!);
+    }
+
+    final results = <String>[];
+
+    for (final rough in roughMatches) {
+      if (rough.contains("/")) continue;
+      results.add(rough);
+    }
+
+    return results;
+  }
 }

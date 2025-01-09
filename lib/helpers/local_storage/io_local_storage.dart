@@ -1,6 +1,8 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:duitgone2/helpers/local_storage/local_storage.dart';
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 class LocalStorage implements AbstractLocalStorage {
@@ -37,7 +39,38 @@ class LocalStorage implements AbstractLocalStorage {
 
     final documentsDir = await getApplicationDocumentsDirectory();
     final file = File("${documentsDir.path}/$path");
+    final Directory pathToFile = Directory(p.dirname(file.path));
+
+    // check if path to file exist
+    if ((await pathToFile.exists()) == false) {
+      // log("${pathToFile.path} directory no exists! Will create the folders");
+      // create directory
+      // create all nonexisting folders provided by [path]
+      await pathToFile.create(recursive: true);
+    }
+
+    // log("Writing to ${file.path}");
     file.writeAsStringSync(content);
     return true;
+  }
+
+  @override
+  Future<List<String>> readFilesInDirectory(String path) async {
+    final Directory documentsDir = await getApplicationDocumentsDirectory();
+
+    final targetDir = Directory("${documentsDir.path}/$path");
+
+    if ((await targetDir.exists()) == false) return [];
+
+    final List<String> files = [];
+
+    targetDir.listSync().forEach((entity) {
+      if (entity is File) {
+        final filename = p.basename(entity.path);
+        files.add(filename);
+      }
+    });
+
+    return files;
   }
 }
