@@ -240,6 +240,13 @@ class Transaction {
     return transactions;
   }
 
+  static Future<List<String>> getAvailableTransactions() async {
+    final availableTransactions =
+        await _localStorage.readFilesInDirectory("transactions");
+
+    return availableTransactions;
+  }
+
   /// Format given date to string key used to store transactions
   ///
   /// Return [String] formatted as "yyyy-MM-dd"
