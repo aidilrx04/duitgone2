@@ -2,6 +2,7 @@
 
 - [ ] Fix implementation keyboard
 - [ ] In date selector bar, display previous date even if it not available
+- [ ] Add custom virtual numpad
 - [ ] Enable user to select time
 - [ ] Export data outside of application sandboxed folders such as Download folder in android
 - [ ] enable custom category colors
