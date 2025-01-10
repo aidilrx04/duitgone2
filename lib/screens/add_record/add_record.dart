@@ -58,7 +58,7 @@ class _AddRecordState extends State<AddRecord> {
             TextField(
               controller: amount,
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^-?\d+\.?\d{0,2}'))
+                FilteringTextInputFormatter.allow(RegExp(r'^-?\d*\.?\d{0,2}'))
               ],
               keyboardType: TextInputType.numberWithOptions(
                 decimal: true,
