@@ -83,7 +83,7 @@ class _EditTileState extends State<EditTile> {
             TextField(
               controller: amountController,
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^-?\d+\.?\d{0,2}'))
+                FilteringTextInputFormatter.allow(RegExp(r'^-?\d*\.?\d{0,2}'))
               ],
               keyboardType: TextInputType.numberWithOptions(
                 decimal: true,

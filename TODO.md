@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] Fix implementation keyboard
+- [x] Fix implementation keyboard (6d8da435d977bf2cc122d4b15821d951b013b4a2)
 - [ ] In date selector bar, display previous date even if it not available
 - [ ] Add custom virtual numpad
 - [ ] Enable user to select time
