@@ -22,19 +22,13 @@ class _HomeState extends State<Home> {
 
   DateTime date = DateTime.now();
 
-  List<String>? dates;
-
   @override
   void initState() {
     super.initState();
 
-    Future.wait([
-      Transaction.getTransactions(date),
-      Transaction.getAvailableTransactions()
-    ]).then((completed) {
+    Transaction.getTransactions(date).then((transactions_) {
       setState(() {
-        transactions = completed[0] as List<Transaction>;
-        dates = completed[1] as List<String>;
+        transactions = transactions_;
       });
     });
   }
@@ -69,7 +63,6 @@ class _HomeState extends State<Home> {
       children: [
         DateSelectBar(
           currentDate: date,
-          availables: dates!,
           onDateSelected: _setNewTransactions,
         ),
         TransactionChart(
@@ -104,12 +97,11 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void _setNewTransactions(String selectedDate) {
-    date = DateTime.parse(selectedDate);
-    Transaction.getTransactions(date).then(
+  void _setNewTransactions(DateTime selectedDate) {
+    Transaction.getTransactions(selectedDate).then(
       (transactions_) {
         setState(() {
-          date = date;
+          date = selectedDate;
           transactions = transactions_;
         });
       },
