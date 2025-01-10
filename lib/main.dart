@@ -1,12 +1,16 @@
 import 'dart:developer';
 
 import 'package:duitgone2/helpers/local_storage/local_storage.dart';
+import 'package:duitgone2/models/transaction.dart';
 import 'package:duitgone2/screens/app.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 void main() {
-  final runTest = true;
+  final runTest = false;
+  final mockData = false;
 
+  // ignore: dead_code
   if (runTest) {
     runApp(const Placeholder());
 
@@ -15,6 +19,25 @@ void main() {
     return;
   }
   runApp(const App());
+
+  // ignore: dead_code
+  if (mockData) {
+    // insert localStorage mock data
+    final localStorage = LocalStorage();
+    final yesterday = DateTime.now().subtract(Duration(days: 1));
+    final today = DateTime.now();
+    final tomorrow = DateTime.now().add(Duration(days: 1));
+    final formatter = DateFormat("yyyy-MM-dd");
+    final data = <DateTime, List<Transaction>>{
+      yesterday: Transaction.generateMockData(),
+      today: Transaction.generateMockData(),
+      tomorrow: Transaction.generateMockData(),
+    };
+
+    for (final entry in data.entries) {
+      Transaction.saveTransactions(entry.key, entry.value);
+    }
+  }
 }
 
 class LocalTest {
