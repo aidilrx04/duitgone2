@@ -134,6 +134,17 @@ class _HomeState extends State<Home> {
       );
 
   void _addTransaction(Transaction transaction) {
+
+    final formatter = DateFormat("yyyy-MM-dd");
+    // get diff in days between current selected date and today
+    final diff = DateTime.parse(formatter.format(transaction.date)).difference(
+      DateTime.parse(
+        formatter.format(date),
+      ),
+    );
+    transaction.date = transaction.date.subtract(
+      diff,
+    );
     setState(() {
       transactions!.insert(0, transaction);
 
