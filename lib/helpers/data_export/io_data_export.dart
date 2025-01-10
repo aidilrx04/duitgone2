@@ -20,15 +20,28 @@ class DataExporter implements stub.DataExporter {
     if (!status.isGranted) {
       log("Storage permission is not granted. Requesting permission...");
       await Permission.storage.request();
-      log("Request done. Is storage permission granted?: ${await Permission.storage.status}");
     }
 
-    Directory? downloadDir = await getDownloadsDirectory();
+    final newStatus = await Permission.storage.status;
 
-    if (downloadDir == null) {
-      throw Exception("Download path do not exist");
+    if (!newStatus.isGranted) {
+      throw Exception("Write permission needed to export data!");
     }
 
+    var downloadDir = await getExternalStorageDirectory();
+
+    if (Platform.isAndroid) {
+      downloadDir = Directory("storage/emulated/0/Download/duitGone2");
+    }
+
+    if (downloadDir == null && !Platform.isAndroid) {
+      throw Exception("Download path does not exist!");
+    }
+
+    if (Platform.isAndroid & (await downloadDir!.exists()) == false) {
+      // create new download
+      await downloadDir.create(recursive: true);
+    }
     return downloadDir.path;
   }
 
