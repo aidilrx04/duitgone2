@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 
 class DateSelectBar extends StatelessWidget {
   const DateSelectBar({
@@ -43,8 +44,9 @@ class DateSelectBar extends StatelessWidget {
                 _formatDate(date),
                 style: TextStyle(
                   color: Colors.black87,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontWeight:
+                      date == currentDate ? FontWeight.bold : FontWeight.normal,
+                  fontSize: date == currentDate ? 18 : 16,
                 ),
               ),
             ),
