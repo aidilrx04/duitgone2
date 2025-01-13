@@ -12,4 +12,5 @@
 - [ ] Add notification
 - [ ] Add REST API
 - [ ] Add background services to sync data
-
+- [ ] Add line chart to compare expense and income
+- [ ] Add statistic
