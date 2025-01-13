@@ -1,5 +1,6 @@
 import 'package:duitgone2/models/category.dart';
 import 'package:duitgone2/models/transaction.dart';
+import 'package:duitgone2/screens/add_record/time_picker_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -20,6 +21,7 @@ class _AddRecordState extends State<AddRecord> {
   bool hasLoaded = false;
   bool isAmountValid = true;
   bool hasCatSelected = true;
+  TimeOfDay? timeOfDay;
 
   late FocusNode focusNode;
 
@@ -130,6 +132,16 @@ class _AddRecordState extends State<AddRecord> {
                   ),
               ],
             ),
+            SizedBox(
+              height: 10,
+            ),
+            TimePickerSection(
+              onTimeChanged: (TimeOfDay time) {
+                setState(() {
+                  timeOfDay = time;
+                });
+              },
+            ),
             if (hasCatSelected == false) ...[
               SizedBox(
                 height: 5,
@@ -168,7 +180,21 @@ class _AddRecordState extends State<AddRecord> {
   }
 
   Transaction _createTransaction(double amount, String cat) {
-    return Transaction(amount: amount, category: cat, date: DateTime.now());
+    final now = DateTime.now();
+    setState(() {
+      timeOfDay ??= TimeOfDay.now();
+    });
+    return Transaction(
+      amount: amount,
+      category: cat,
+      date: DateTime(
+        now.year,
+        now.month,
+        now.day,
+        timeOfDay!.hour,
+        timeOfDay!.minute,
+      ),
+    );
   }
 
   _onAddBtnTap(BuildContext context) {
