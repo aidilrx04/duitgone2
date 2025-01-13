@@ -5,47 +5,28 @@ class DateSelectBar extends StatelessWidget {
   const DateSelectBar({
     super.key,
     required this.currentDate,
-    required this.availables,
     required this.onDateSelected,
   });
 
   final DateTime currentDate;
-  final List<String> availables;
-  final void Function(String selectedDate) onDateSelected;
+  final void Function(DateTime selectedDate) onDateSelected;
 
   @override
   Widget build(BuildContext context) {
-    // print(DateTime.now());
-    String? prev;
-    String? next;
-    prev = _getPrev();
-    next = _getNext();
+    // range to display at top bar, always have currentDate - 1 day
+    final range = [
+      currentDate.subtract(Duration(days: 1)),
+      currentDate,
+    ];
 
-    final prevBtn = prev != null
-        ? TextButton(
-            onPressed: () {
-              onDateSelected(prev!);
-            },
-            child: Text(
-              DateFormat("dd-MM").format(
-                DateTime.parse(prev),
-              ),
-            ),
-          )
-        : _createEmptyDate();
+    final isCurrentToday = _isToday(currentDate);
 
-    final nextBtn = next != null
-        ? TextButton(
-            onPressed: () {
-              onDateSelected(next!);
-            },
-            child: Text(
-              DateFormat("dd-MM").format(
-                DateTime.parse(next),
-              ),
-            ),
-          )
-        : _createEmptyDate();
+    // check if current selected date is today,
+    // if not, add selected date + 1 day
+    // means that selected date is in the past
+    if (!isCurrentToday) {
+      range.add(currentDate.add(Duration(days: 1)));
+    }
 
     return SizedBox(
       height: 50,
@@ -53,40 +34,24 @@ class DateSelectBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          prevBtn,
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              DateFormat("dd-MM").format(currentDate),
-              style: TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+          for (final date in range)
+            TextButton(
+              onPressed: () {
+                onDateSelected(date);
+              },
+              child: Text(
+                _formatDate(date),
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
               ),
             ),
-          ),
-          nextBtn
+          if (isCurrentToday) _createEmptyDate(),
         ],
       ),
     );
-  }
-
-  String? _getPrev() {
-    var prevDate = currentDate.subtract(Duration(days: 1));
-    final prevDateString = DateFormat("yyyy-MM-dd").format(prevDate);
-
-    if (!availables.contains(prevDateString)) return null;
-
-    return prevDateString;
-  }
-
-  String? _getNext() {
-    var nextDate = currentDate.add(Duration(days: 1));
-    final nextDateString = DateFormat("yyyy-MM-dd").format(nextDate);
-
-    if (!availables.contains(nextDateString)) return null;
-
-    return nextDateString;
   }
 
   _createEmptyDate() {
@@ -99,5 +64,19 @@ class DateSelectBar extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _formatDate(DateTime date) {
+    final formatter = DateFormat("dd-MM");
+    return formatter.format(date);
+  }
+
+  bool _isToday(DateTime date) {
+    final formatter = DateFormat("yyyy-MM-dd");
+
+    final dateInDateFormat = DateTime.parse(formatter.format(date));
+    final todayInDateFormat = DateTime.parse(formatter.format(DateTime.now()));
+
+    return dateInDateFormat.isAtSameMomentAs(todayInDateFormat);
   }
 }

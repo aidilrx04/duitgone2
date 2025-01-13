@@ -1,22 +1,30 @@
 import 'dart:convert';
-import 'dart:math';
+import 'dart:math' show Random;
 
+import 'package:duitgone2/helpers/local_storage/local_storage.dart';
 import 'package:duitgone2/models/category.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 ///
-/// Transactions data structure in storage
-/// "transactions": {
-/// "YYYY-mm-dd": [
+/// Transactions data structure in file storage
+/// Filename should indicate the date of the transactions, eg: 2025-01-01.json
+/// On mobiles, Data inside file should formatted like this:
+/// [
 ///   {
-///   "amount": 10.00,
-///   "category": "Category Label",
-///   "date": "YYYY-mm-dd HH:mm:ss"
-///   },
+///     "amount": 10.00,
+///     "category": "Category Label"
+///     "date": "yyyy-MM-dd hh:mm:ss"
+///   }
+/// ]
+///
+/// On Web, data will be stored as SharedPreferences data like this
+/// {
+///   ...,
+///   "transactions/2025-01-01": [
+///     ...
+///   ]
 ///   ...
-/// ],
-/// ...
 /// }
 ///
 
@@ -26,6 +34,8 @@ class Transaction {
   late double amount;
   late String category;
   late DateTime date;
+
+  static final LocalStorage _localStorage = LocalStorage();
 
   Transaction({
     required this.amount,
@@ -158,5 +168,89 @@ class Transaction {
     amount = (json['amount'] as num).toDouble();
     category = json['category'];
     date = DateTime.parse(json['date']);
+  }
+
+  /// Save lists of transactions grouped by their date to local storage
+  ///
+  /// Will write to system then internal [_data]
+  /// with matching date will be overwite.
+  ///
+  /// Returns true everytime.
+  /// Currently there is no way for this method to return false
+  static Future<bool> saveTransactions(
+    DateTime date,
+    List<Transaction> transactions,
+  ) async {
+    final key = _formatDateKey(date);
+    final path = "transactions/$key";
+    final transactionsString = jsonEncode(transactions);
+
+    await _localStorage.write(path, transactionsString);
+
+    _data[key] = transactions;
+
+    return true;
+  }
+
+  /// Save transaction to local storage
+  ///
+  /// Will add the transactions to internal matching key [_data]
+  /// as the first element if the key exists,
+  /// else just create transaction in list as sole element
+  ///
+  /// Return true evertime.
+  /// Currently there is no way for this method to return false.
+  static Future<bool> saveTransaction(Transaction transaction) async {
+    final key = _formatDateKey(transaction.date);
+    _data[key] =
+        _data[key] == null ? [transaction] : [transaction, ...?_data[key]];
+
+    final path = "transactions/$key";
+    final content = jsonEncode(_data[key]);
+
+    await _localStorage.write(path, content);
+
+    return true;
+  }
+
+  /// Get list of transactions from local storage
+  ///
+  /// Will load the transactions from file,
+  /// then overwrite internal [_data] with matching date
+  ///
+  /// Return list of transactions if records exist, else an empty list
+  static Future<List<Transaction>> getTransactions(DateTime date) async {
+    final key = _formatDateKey(date);
+    final path = "transactions/$key";
+
+    final String? content = await _localStorage.read(path);
+
+    if (content == null) return [];
+
+    final parsedContent = jsonDecode(content);
+
+    final List<Transaction> transactions = (parsedContent as Iterable)
+        .map((data) => Transaction.fromString(jsonEncode(data)))
+        .toList();
+
+    // save transactions in memory
+    _data[key] = transactions;
+
+    // print(_data);
+    return transactions;
+  }
+
+  static Future<List<String>> getAvailableTransactions() async {
+    final availableTransactions =
+        await _localStorage.readFilesInDirectory("transactions");
+
+    return availableTransactions;
+  }
+
+  /// Format given date to string key used to store transactions
+  ///
+  /// Return [String] formatted as "yyyy-MM-dd"
+  static String _formatDateKey(DateTime date) {
+    return DateFormat("yyyy-MM-dd").format(date);
   }
 }

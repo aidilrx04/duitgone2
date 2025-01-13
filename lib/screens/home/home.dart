@@ -5,6 +5,7 @@ import 'package:duitgone2/screens/home/home_drawer.dart';
 import 'package:duitgone2/screens/home/transaction_chart.dart';
 import 'package:duitgone2/screens/home/transaction_list.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 enum ChartType { ALL, EXPENSE, INCOME }
 
@@ -21,15 +22,13 @@ class _HomeState extends State<Home> {
 
   DateTime date = DateTime.now();
 
-  List<String>? dates;
-
   @override
   void initState() {
     super.initState();
-    Transaction.loadData().then((val) {
+
+    Transaction.getTransactions(date).then((transactions_) {
       setState(() {
-        transactions = Transaction.getDataDay(date);
-        dates = Transaction.getDates();
+        transactions = transactions_;
       });
     });
   }
@@ -64,13 +63,7 @@ class _HomeState extends State<Home> {
       children: [
         DateSelectBar(
           currentDate: date,
-          availables: dates!,
-          onDateSelected: (String selectedDate) {
-            setState(() {
-              date = DateTime.parse(selectedDate);
-              transactions = Transaction.getDataDay(date);
-            });
-          },
+          onDateSelected: _setNewTransactions,
         ),
         TransactionChart(
           transactions: transactions!,
@@ -104,8 +97,19 @@ class _HomeState extends State<Home> {
     );
   }
 
+  void _setNewTransactions(DateTime selectedDate) {
+    Transaction.getTransactions(selectedDate).then(
+      (transactions_) {
+        setState(() {
+          date = selectedDate;
+          transactions = transactions_;
+        });
+      },
+    );
+  }
+
   void _onTransactionsUpdated(List<Transaction> updatedTransactions) {
-    Transaction.saveTransactionsByDay(date, updatedTransactions).then((val) {
+    Transaction.saveTransactions(date, updatedTransactions).then((val) {
       setState(() {
         transactions = updatedTransactions;
       });
@@ -134,11 +138,23 @@ class _HomeState extends State<Home> {
       );
 
   void _addTransaction(Transaction transaction) {
-    setState(() {
-      transactions!.insert(0, transaction);
+    final formatter = DateFormat("yyyy-MM-dd");
+    // get diff in days between current selected date and today
+    final diff = DateTime.parse(formatter.format(transaction.date)).difference(
+      DateTime.parse(
+        formatter.format(date),
+      ),
+    );
 
-      // save transactions
-      Transaction.save(transaction);
+    // subtract difference between selected date and today
+    transaction.date = transaction.date.subtract(
+      diff,
+    );
+
+    Transaction.saveTransaction(transaction).then((val) {
+      setState(() {
+        transactions!.insert(0, transaction);
+      });
     });
   }
 }
