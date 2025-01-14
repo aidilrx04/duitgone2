@@ -3,6 +3,7 @@ import 'package:duitgone2/helpers/data_export/data_export.dart'
     if (dart.library.io) 'package:duitgone2/helpers/data_export/io_data_export.dart';
 import 'package:duitgone2/screens/about/about.dart';
 import 'package:duitgone2/screens/home/home.dart';
+import 'package:duitgone2/screens/settings/settings.dart';
 import 'package:flutter/material.dart';
 
 class HomeDrawer extends StatelessWidget {
@@ -56,6 +57,13 @@ class HomeDrawer extends StatelessWidget {
               },
               title: Text("Export Data"),
               leading: Icon(Icons.file_download_outlined),
+            ),
+            ListTile(
+              title: Text("Settings"),
+              leading: Icon(Icons.settings_outlined),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => Settings(),
+              )),
             ),
             ListTile(
               onTap: () {
